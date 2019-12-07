@@ -1,0 +1,37 @@
+version: '3'
+services:
+  webapp:
+    restart: always
+    container_name: scan-server
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.dockerfile
+      args:
+        SCANNER_IP: ${SCANNER_IP}
+        SCANNER_MODEL: ${SCANNER_MODEL}
+        FRIENDLY_NAME: ${BROTHER_SCANNER}
+    image: scan-server-webapp    
+    ports:
+     - 80:80
+    volumes:
+      - .:/app
+    links:
+      - minio  
+    depends_on:
+      - minio  
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DATABASE_NAME: ScannersDB
+  minio:
+    restart: always
+    container_name: minio-storage
+    image: minio/minio
+    ports:
+      - 9000:9000
+    volumes:
+      - /minio/data:/data
+      - /minio/config:/root/.minio
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /data             
