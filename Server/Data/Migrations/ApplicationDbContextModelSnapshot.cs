@@ -74,7 +74,7 @@ namespace SaneServer.Server.Data.Migrations
                         new
                         {
                             Id = 1,
-                            PasswordHash = "AQAAAAEAACcQAAAAEJgBTWevbuyMnLD9KwP3aaFpwT0NS1SkTZVIEGsmsjPhEMcUWQjAc/5yGE0k3OWiHA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGE2DJ7ZDGJwbCGo5kUaOrgpzkWj/GVL2+NPe7a+W3Bq2cdJoNB4LSPl8+3pQX/gKQ==",
                             Role = 0,
                             UserName = "admin"
                         });

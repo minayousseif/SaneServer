@@ -41,7 +41,7 @@ namespace SaneServer.Server.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "PasswordHash", "Role", "UserName" },
-                values: new object[] { 1, null, "AQAAAAEAACcQAAAAEJgBTWevbuyMnLD9KwP3aaFpwT0NS1SkTZVIEGsmsjPhEMcUWQjAc/5yGE0k3OWiHA==", 0, "admin" });
+                values: new object[] { 1, null, "AQAAAAEAACcQAAAAEGE2DJ7ZDGJwbCGo5kUaOrgpzkWj/GVL2+NPe7a+W3Bq2cdJoNB4LSPl8+3pQX/gKQ==", 0, "admin" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

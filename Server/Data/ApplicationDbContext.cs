@@ -14,7 +14,7 @@ namespace SaneServer.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   
-            // Seeding the database with default admin creds
+            // Seeding the database with a default admin creds
             string UserName = "admin";
             modelBuilder.Entity<User>().HasData(
                new User {

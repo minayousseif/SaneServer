@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+export ASPNETCORE_ENVIRONMENT=Development
+dotnet watch run

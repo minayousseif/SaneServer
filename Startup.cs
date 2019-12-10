@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SaneServer.Server.Data;
+using SaneServer.Server.Services;
+using SaneServer.Server.Validators;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SaneServer.Server.Helpers;
 
 namespace SaneServer
 {
@@ -23,14 +30,37 @@ namespace SaneServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // configure the app settings and bind it to a setting instance
+            var appSettingsConfig = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsConfig);
+
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("DataSource=scanners.db"));
-            services.AddAuthentication();
+
+            // configure the jwt auth
+            var appSettings = appSettingsConfig.Get<AppSettings>();
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options => {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Secret)),
+                    ValidateLifetime = true
+
+                };
+            });
             services.AddControllersWithViews();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "Client/build";
             });
+
+             services.AddScoped<IUserService, UserService>();
+             services.AddScoped<ICustomPasswordValidator, CustomPasswordValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,10 +81,10 @@ namespace SaneServer
             app.UseStaticFiles();
 
             app.UseSpaStaticFiles();
-
+            
             app.UseRouting();
-
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

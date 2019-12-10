@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using SaneServer.Server.DTO;
@@ -6,8 +7,11 @@ using SaneServer.Server.Models;
 using SaneServer.Server.Data;
 using SaneServer.Server.Validators;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+using SaneServer.Server.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Options;
 
 namespace SaneServer.Server.Services
 {
@@ -16,24 +20,59 @@ namespace SaneServer.Server.Services
         private readonly ApplicationDbContext _db;
         private readonly ICustomPasswordValidator _passwordValidator;
 
-        public UserService(ApplicationDbContext db, ICustomPasswordValidator passwordValidator) 
+        private readonly AppSettings _appSettings;
+
+        public UserService(
+            ApplicationDbContext db, 
+            ICustomPasswordValidator passwordValidator,
+            IOptions<AppSettings> appSettings
+        ) 
         {
             _db = db;
             _passwordValidator = passwordValidator;
+            _appSettings = appSettings.Value;
         }
 
-        public bool Authenticate(string username, string password) {
+        public UserResponse Authenticate(string username, string password) {
+
             var user = _db.Users.Where(u => u.UserName == username).FirstOrDefault();
-            if (user == null) { 
-                return false; 
-            }
-            var passwordHasher = new PasswordHasher<string>();
-            bool verified = passwordHasher.VerifyHashedPassword(username, user.PasswordHash, password) == PasswordVerificationResult.Success;
-            if(verified) {
-                return true;
+            
+            if (user == null) {
+                return null;
             }
 
-            return false;
+            var passwordHasher = new PasswordHasher<string>();
+            var results = passwordHasher.VerifyHashedPassword(username, user.PasswordHash, password);
+
+            if(results != PasswordVerificationResult.Success) {
+                return null;
+            }
+            var userResp = user.MapUserResponse();
+            userResp.Token = GenerateJwtToken(user);
+            
+            return userResp;
+        }
+
+        public string GenerateJwtToken(User user) {
+            var secretKey = Encoding.ASCII.GetBytes("");
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[] 
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, user.RoleString)
+                }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials
+                    (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret)), 
+                    SecurityAlgorithms.HmacSha512Signature
+                )
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

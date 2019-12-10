@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,7 +20,12 @@ namespace SaneServer.Server.Models
 
         [Required, MaxLength(1024)]
         public string PasswordHash { get; set; }
-
         public virtual UserRole Role {get; set;}
+
+        public string RoleString {
+            get {
+                return Enum.GetName(typeof(UserRole), Role);
+            }
+        }
     }
 }
