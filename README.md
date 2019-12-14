@@ -9,6 +9,6 @@ The golang version was only an API, Now a React frontend will be added to intera
 
 ### EF Migrations
 
-dotnet build
-dotnet ef migrations add Initial -o ./Server/Data/Migrations
-dotnet ef database update
+- dotnet build
+- dotnet ef migrations add Initial -o ./Server/Data/Migrations
+- dotnet ef database update

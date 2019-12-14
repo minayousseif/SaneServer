@@ -6,8 +6,8 @@ namespace SaneServer.Server.Helpers
 {
     public static class UserExtensionMethods
     {
-        public static UserResponse MapUserResponse(this User user) => 
-            new UserResponse {
+        public static AuthResponse MapUserResponse(this User user) => 
+            new AuthResponse {
                 UserName = user.UserName,
                 Email = user.Email,
                 Role = user.RoleString

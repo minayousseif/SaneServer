@@ -33,7 +33,7 @@ namespace SaneServer.Server.Services
             _appSettings = appSettings.Value;
         }
 
-        public UserResponse Authenticate(string username, string password) {
+        public AuthResponse Authenticate(string username, string password) {
 
             var user = _db.Users.Where(u => u.UserName == username).FirstOrDefault();
             
@@ -47,13 +47,15 @@ namespace SaneServer.Server.Services
             if(results != PasswordVerificationResult.Success) {
                 return null;
             }
-            var userResp = user.MapUserResponse();
-            userResp.Token = GenerateJwtToken(user);
+            var authResp = user.MapUserResponse();
+            var tokenExpiration = DateTime.UtcNow.AddDays(1);
+            authResp.Token = GenerateJwtToken(user, tokenExpiration);
+            authResp.TokenExpiration = tokenExpiration;
             
-            return userResp;
+            return authResp;
         }
 
-        public string GenerateJwtToken(User user) {
+        public string GenerateJwtToken(User user, DateTime tokenExpiration) {
             var secretKey = Encoding.ASCII.GetBytes("");
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -64,7 +66,7 @@ namespace SaneServer.Server.Services
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Role, user.RoleString)
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = tokenExpiration,
                 SigningCredentials = new SigningCredentials
                     (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret)), 
                     SecurityAlgorithms.HmacSha512Signature

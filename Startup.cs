@@ -52,7 +52,11 @@ namespace SaneServer
 
                 };
             });
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                    .AddJsonOptions(options => {
+                         options.JsonSerializerOptions.WriteIndented = true;
+                         options.JsonSerializerOptions.IgnoreNullValues = true;
+                    });
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

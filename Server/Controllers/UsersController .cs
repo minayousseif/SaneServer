@@ -32,14 +32,14 @@ namespace SaneServer.Server.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _userService.Authenticate(userCreds.UserName, userCreds.Password);
+                var userAuthResp = _userService.Authenticate(userCreds.UserName, userCreds.Password);
 
-                if (user == null)
+                if (userAuthResp == null)
                 {
                     return Unauthorized();
                 }
 
-                return Ok(user);
+                return Ok(userAuthResp);
             }
             return BadRequest(ModelState);
         }
