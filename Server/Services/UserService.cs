@@ -50,6 +50,7 @@ namespace SaneServer.Server.Services
             var authResp = user.MapUserResponse();
             var tokenExpiration = DateTime.UtcNow.AddDays(1);
             authResp.Token = GenerateJwtToken(user, tokenExpiration);
+            authResp.TokenUUID = Guid.NewGuid().ToString();
             authResp.TokenExpiration = tokenExpiration;
             
             return authResp;
