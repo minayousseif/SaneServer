@@ -40,6 +40,12 @@
   }
 }
 
+.dropdown {
+  button.btn-link {
+    padding: 0 5px;
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

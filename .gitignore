@@ -236,3 +236,7 @@ _Pvt_Extensions
 
 #sqlite database
 *.db
+
+#AspNet.Core Static Files
+ScannedFiles/images/*.*
+ScannedFiles/pdf/*.*

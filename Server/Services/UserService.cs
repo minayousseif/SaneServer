@@ -57,7 +57,7 @@ namespace SaneServer.Server.Services
         }
 
         public string GenerateJwtToken(User user, DateTime tokenExpiration) {
-            var secretKey = Encoding.ASCII.GetBytes("");
+            var secretKey = Encoding.UTF8.GetBytes(_appSettings.Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -69,7 +69,7 @@ namespace SaneServer.Server.Services
                 }),
                 Expires = tokenExpiration,
                 SigningCredentials = new SigningCredentials
-                    (new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.Secret)), 
+                    (new SymmetricSecurityKey(secretKey), 
                     SecurityAlgorithms.HmacSha512Signature
                 )
             };

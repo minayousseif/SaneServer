@@ -1,22 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+
+import './Home.scss';
 
 const Home = () => (
-  <div>
-    <h1>Hello, world!</h1>
-    <p>Welcome to your new single-page application, built with:</p>
-    <ul>
-      <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-      <li><a href='https://facebook.github.io/react/'>React</a> and <a href='https://redux.js.org/'>Redux</a> for client-side code</li>
-      <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-    </ul>
-    <p>To help you get started, we've also set up:</p>
-    <ul>
-      <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-      <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-      <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
-    </ul>
-    <p>The <code>Client</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
+  <div className="container-fluid">
+    <div className="row">
+      <div className="col-sm-12 col-md-12 col-lg-12">
+        <div className="card card-scanner shadow mb-4">
+          <div className="card-header d-flex flex-row align-items-center justify-content-between">
+            <h6 className="m-0 font-weight-bold text-primary">Scanner Perview</h6>
+            <UncontrolledDropdown>
+              <DropdownToggle color="link">
+                <FontAwesomeIcon icon={faEllipsisV} size="sm" className="text-gray-400" color="fw" />
+              </DropdownToggle>
+              <DropdownMenu className="shadow animated--fade-in" right={true}>
+                <DropdownItem header>Header</DropdownItem>
+                <DropdownItem disabled>Action</DropdownItem>
+                <DropdownItem>Another Action</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem>Another Action</DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </div>
+          <div className="card-body">
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 );
 

@@ -12,7 +12,6 @@ using SaneServer.Server.Services;
 
 namespace SaneServer.Server.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UsersController : ControllerBase

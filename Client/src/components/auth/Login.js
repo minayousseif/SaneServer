@@ -7,8 +7,8 @@ import {
 import AlertPanel from '../shared/AlertPanel';
 import './Login.scss';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserShield } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserShield } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   document.body.classList.add('bg-gradient-primary');
@@ -31,7 +31,7 @@ const Login = () => {
         <div className="col-sm-9 col-md-7 col-lg-5 mx-auto">
           <div className="login-container">
             <AlertPanel 
-              color='danger'
+              color="danger"
               isOpen={hasError}
               toggle={() => dispatch(ClearUserError())}
             >
